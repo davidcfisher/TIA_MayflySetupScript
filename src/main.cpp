@@ -39,6 +39,7 @@ void setup ()
     rtc.begin();
 
     Serial.println("EnviroDIY Mayfly: Blink demo with serial temperature");
+    Serial.println("Modified by Dave");
 
 }
 
