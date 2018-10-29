@@ -12,4 +12,8 @@ Ensure VSCode, PlatformIO and GIT are set up correctly for connection to Mayfly
     1. Customize Git in VSCode, using the PowerShell terminal (View/Terminal):
         1. PS C:\yourGitLocation> git config --global user.email "your@email.com"
         1. PS C:\yourGitLocation> git config --global user.name "Your Name"
-
+1. Clone repository from GitHub onto local computer
+    1. Using Command Pallette
+        1. Git: Clone
+        1. Repository URL: https://github.com/davidcfisher/TIA_MayflySetupScript (for example)
+        1. Select folder: location for code on your local machine
