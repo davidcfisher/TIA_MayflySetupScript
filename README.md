@@ -3,6 +3,10 @@ Ensure VSCode, PlatformIO and GIT are set up correctly for connection to Mayfly
 ## Setup steps
 1. Download and install **Visual Studio Code** (VSCode) (note: NOT *Visual Studio IDE*)
     1. https://visualstudio.microsoft.com
+    1. **Git**
+        1. If Git is not installed on your machine (or is downlevel), VSCode will allow for installation or update.
+            1. During setup: Choosing the default editor used by Git
+                1. Use Visual Studio Code as Git's default editor
 1. Install the **PlatformIO IDE** Extension in VSCode
     1. Reference: http://docs.platformio.org/en/latest/ide/vscode.html#ide-vscode
     1. "Reload" PlatformIO IDE to activate it, if needed.  It may take several minutes to be activated and loaded - watch status in lower left corner of window - and status in the terminal window.  VSCode may need to be restarted (multiple times).
@@ -11,12 +15,8 @@ Ensure VSCode, PlatformIO and GIT are set up correctly for connection to Mayfly
         1. Board: EnviroDIY Mayfly
         1. Location: uncheck *Use default location,* and specification location for project
     1. Name the Workspace: File/Save Workspace As...
-1. Update or download and install **Git**
-    1. https://git-scm.com/download/win
-    1. Video tutorial: https://www.youtube.com/watch?v=9cMWR-EGFuY
-    1. During setup: Choosing the default editor used by Git
-        1. Use Visual Studio Code as Git's default editor
-    1. Add Git Repository to VSCode, using Command Pallette (View/Command Pallette)
+1. Initialize **Git**
+    1. Initialize Git Repository in VSCode, using Command Pallette (View/Command Pallette)
         1. Git: Initialize Repository 
     1. Customize Git in VSCode, using the PowerShell terminal (View/Terminal):
         1. PS C:\yourGitLocation> git config --global user.email "your@email.com"
