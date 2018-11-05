@@ -12,13 +12,15 @@ Ensure VSCode, PlatformIO and GIT are set up correctly for connection to Mayfly
 1. Install the **PlatformIO IDE** Extension in VSCode
     1. Reference: http://docs.platformio.org/en/latest/ide/vscode.html#ide-vscode
     1. "Reload" PlatformIO IDE to activate it, if needed.  It may take several minutes to be activated and loaded - watch status in lower left corner of window - and status in the terminal window.  VSCode may need to be restarted (multiple times).
-    1. **Libraries**: install *EnviroDIY_ModularSensors*
 1. Initialize **Git**
     1. Initialize Git Repository in VSCode, using Command Pallette (View/Command Pallette)
         1. Git: Initialize Repository 
-    1. Customize Git in VSCode, using the PowerShell terminal (View/Terminal):
+    1. Customize Git in VSCode, in a terminal (View/Terminal):
         1. PS C:\yourGitLocation> git config --global user.email "your@email.com"
         1. PS C:\yourGitLocation> git config --global user.name "Your Name"
+1. Install **EnviroDIY Mayfly** libraries
+    1. In a terminal (View/Terminal):
+        1. PS C:\yourGitLocation> pio lib -g install https://github.com/EnviroDIY/Libraries.git#platformio
 1. Clone repository from GitHub onto local computer
     1. Using Command Pallette
         1. Git: Clone
