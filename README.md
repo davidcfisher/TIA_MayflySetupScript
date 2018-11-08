@@ -21,6 +21,8 @@ Ensure VSCode, PlatformIO and GIT are set up correctly for connection to Mayfly
 1. Install **EnviroDIY Mayfly** libraries
     1. In a terminal (View/Terminal):
         1. PS C:\yourGitLocation> pio lib -g install https://github.com/EnviroDIY/Libraries.git#platformio
+    1. To update in the future, in a terminal:
+        1. PS C:\yourGitLocation> pio lib -g update
 1. Clone repository from GitHub onto local computer
     1. Using Command Pallette
         1. Git: Clone
