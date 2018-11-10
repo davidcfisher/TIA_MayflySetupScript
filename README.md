@@ -1,6 +1,5 @@
-# TIA_OLED_Demo
+# TIA_Mayfly_Cellular_2G
 ## Author
 Dave Fisher
 11/8/2018
 ## Setups
-Grove 128x64 I2C OLED Board
