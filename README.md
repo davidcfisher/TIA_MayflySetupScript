@@ -1,4 +1,4 @@
-# TIA_MayflySetupScript
+# TIA_Mayfly_Cellular_2G
 Ensure VSCode, PlatformIO and GIT are set up correctly for connection to Mayfly
 ## Setup steps
 1. Determine location of files on local machine
