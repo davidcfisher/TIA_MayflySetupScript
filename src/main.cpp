@@ -3,23 +3,15 @@
 
 **************************************************************************/
 
+// Arduion libraries
 #include <Arduino.h>
-#include <Wire.h>                   // I2C communicaions
-#include "Sodaq_DS3231.h"           // Real Time Clock
-#include <SDL_Arduino_SSD1306.h>    // OLED Display, 1 of 2
-#include <AMAdafruit_GFX.h>         // OLED Display, 2 of 2
-#include <SPI.h>                    // For SPI comm (needed for not getting compile error)
+#include <Wire.h>                // I2C communicaions
+#include "Sodaq_DS3231.h"        // Real Time Clock
+#include <SDL_Arduino_SSD1306.h> // OLED Display, 1 of 2
+#include <AMAdafruit_GFX.h>      // OLED Display, 2 of 2
 
-// Pin definitions
-#define OLED_RESET_PIN  4           // OLED display reset pin
-
-// Display demo definitions
-//#define NUMFLAKES 10
-//#define XPOS 0
-//#define YPOS 1
-//#define DELTAY 2
-//#define LOGO16_GLCD_HEIGHT 16
-//#define LOGO16_GLCD_WIDTH  16
+// TIA libraries
+#include <TIA_dateTimeFunctions.h> // date and time functions
 
 int State8 = LOW;
 int State9 = LOW;
@@ -27,88 +19,72 @@ int State9 = LOW;
 float degF;
 float degC;
 
-int LEDtime = 2000;   //milliseconds
+int LEDtime = 2000; //milliseconds
 
-// reset the OLED
-SDL_Arduino_SSD1306 display(OLED_RESET_PIN); // FOR OLED via I2C
+// Create an instance of the OLED display
+SDL_Arduino_SSD1306 oled(4); // FOR OLED via I2C, reset pin 4
 
-void setup () {
+void setup()
+{
+  // OLED SSD1306 Init
+  oled.begin(SSD1306_SWITCHCAPVCC, 0x3C, false); // initialize with the I2C addr 0x3C (for the 128x64)
+
+  oled.clearDisplay();
+  oled.setCursor(0, 0);
+  oled.setTextSize(3);
+  oled.setTextColor(WHITE);
+  oled.print("CKPT 1");
+  oled.display();
 
   pinMode(8, OUTPUT);
-    pinMode(9, OUTPUT);
-    Serial.begin(115200);
-    Wire.begin();
-    rtc.begin();
+  pinMode(9, OUTPUT);
+  Serial.begin(115200);
+  Wire.begin();
+  rtc.begin();
 
-    Serial.println("OLED test");
-    Serial.println("Modified by Dave 11/10/18");
-
-    // START ===============================================================================================
-
-  // SSD1306 Init
-
-  // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C, false);  // initialize with the I2C addr 0x3C (for the 128x64)
-  
-  display.stopscroll();
-  display.clearDisplay();
-  display.setTextSize(3);
-  display.setTextColor(WHITE);
-  display.println("CKPT 1");
-  display.display();
+  Serial.println("Cellular 2G");
+  Serial.println("Modified by Dave 11/11/18");
 }
 
-void loop ()
+void loop()
 {
-    if (State8 == LOW) {
-      State8 = HIGH;
-    } else {
-      State8 = LOW;
-    }
-    digitalWrite(8, State8);
-    State9 = !State8;
-    digitalWrite(9, State9);
 
-    DateTime now = rtc.now(); //get the current date-time
+  if (State8 == LOW)
+  {
+    State8 = HIGH;
+  }
+  else
+  {
+    State8 = LOW;
+  }
 
-    Serial.print("DCF: ");
-    Serial.print(now.month());
-    Serial.print('/');
-    Serial.print(now.date());
-    Serial.print('/');
-    Serial.print(String(now.year()).substring(2));
-    Serial.print(' ');
-    Serial.print(now.hour());
-    Serial.print(':');
-    Serial.print(now.minute());
-    Serial.print(':');
-    Serial.print(now.second());
-    Serial.print(": ");
-    
-    rtc.convertTemperature();             // convert current temperature into registers
-    degC = rtc.getTemperature();          // read registers
-    degF = degC * 1.8 + 32;               // calculate °F
-    Serial.print(degC,1);
-    Serial.print("° C, ");
-    Serial.print(degF,1);
-    Serial.println("° F");
+  digitalWrite(8, State8);
+  State9 = !State8;
+  digitalWrite(9, State9);
 
-    display.clearDisplay();
-    display.setTextSize(2);
-    display.setCursor(0,0);
-    display.print(now.month());
-    display.print('/');
-    display.print(now.date());
-    display.print('/');
-    display.println(String(now.year()).substring(2));
-    display.print(now.hour());
-    display.print(':');
-    display.print(now.minute());
-    display.print(':');
-    display.println(now.second());
-    display.print(degF,1);
-    display.println(" degrees F");
-    display.display();
+  //DateTime now = rtc.now(); //get the current date-time
 
-    delay(LEDtime);
+  char suffix[] = ": ";
+  serialPrint_dateTime(suffix);
+
+  rtc.convertTemperature();    // convert current temperature into registers
+  degC = rtc.getTemperature(); // read registers
+  degF = degC * 1.8 + 32;      // calculate °F
+  Serial.print(degC, 1);
+  Serial.print("° C, ");
+  Serial.print(degF, 1);
+  Serial.println("° F");
+
+  oled.clearDisplay();
+  oled.setCursor(0, 0);
+  oled.setTextSize(2);
+  oled.setTextColor(WHITE);
+  oled.println("CKPT 2");
+  oled.setTextSize(1);
+  oledPrint_dateTime(oled, "", true);
+  oled.print(degF, 1);
+  oled.println(" degF");
+  oled.display();
+
+  delay(LEDtime);
 }

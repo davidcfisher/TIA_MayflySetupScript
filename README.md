@@ -28,6 +28,5 @@ Ensure VSCode, PlatformIO and GIT are set up correctly for connection to Mayfly
         1. Git: Clone
         1. Repository URL: https://github.com/davidcfisher/TIA_MayflySetupScript (for example)
         1. Select folder: (C:/data/Mayfly, for example)
-1. Update platformio.ini as needed
-    1. Change *upload_port = COMX* 
+
 
