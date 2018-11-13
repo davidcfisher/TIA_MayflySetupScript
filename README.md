@@ -23,6 +23,12 @@ Ensure VSCode, PlatformIO and GIT are set up correctly for connection to Mayfly
     1. Note: to get the latest updates:
         1. PS C:\yourGitLocation> pio lib -g update
     1. Reference: https://github.com/EnviroDIY/Libraries
+1. Install **PlatformIO** libraries
+    1. Select *PIO Home* tab
+    1. Select *Libraries* side-tab
+    1. Select *Registry* at the top
+    1. Search for and install the following libraries:
+        1. **PubSubClient**, required by TinyGSM to support MQTT
 1. Clone repository from GitHub onto local computer
     1. Using Command Pallette
         1. Git: Clone

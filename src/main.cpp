@@ -3,15 +3,21 @@
 
 **************************************************************************/
 
-// Arduion libraries
+// Arduino libraries
 #include <Arduino.h>
 #include <Wire.h>                // I2C communicaions
 #include "Sodaq_DS3231.h"        // Real Time Clock
 #include <SDL_Arduino_SSD1306.h> // OLED Display, 1 of 2
 #include <AMAdafruit_GFX.h>      // OLED Display, 2 of 2
 
+// PlatformIO libraries
+#include <String.h>
+
 // TIA libraries
 #include <TIA_dateTimeFunctions.h> // date and time functions
+
+int ckpt = 1;
+String ckptStr;
 
 int State8 = LOW;
 int State9 = LOW;
@@ -24,6 +30,85 @@ int LEDtime = 2000; //milliseconds
 // Create an instance of the OLED display
 SDL_Arduino_SSD1306 oled(4); // FOR OLED via I2C, reset pin 4
 
+//======= TINYGSM Start
+/**************************************************************
+ *
+ * For this example, you need to install PubSubClient library:
+ *   https://github.com/knolleary/pubsubclient
+ *   or from http://librarymanager/all#PubSubClient
+ *
+ * TinyGSM Getting Started guide:
+ *   http://tiny.cc/tiny-gsm-readme
+ *
+ * For more MQTT examples, see PubSubClient library
+ *
+ **************************************************************
+ * Use Mosquitto client tools to work with MQTT
+ *   Ubuntu/Linux: sudo apt-get install mosquitto-clients
+ *   Windows:      https://mosquitto.org/download/
+ *
+ * Subscribe for messages:
+ *   mosquitto_sub -h test.mosquitto.org -t GsmClientTest/init -t GsmClientTest/ledStatus -q 1
+ * Toggle led:
+ *   mosquitto_pub -h test.mosquitto.org -t GsmClientTest/led -q 1 -m "toggle"
+ *
+ * You can use Node-RED for wiring together MQTT-enabled devices
+ *   https://nodered.org/
+ * Also, take a look at these additional Node-RED modules:
+ *   node-red-contrib-blynk-ws
+ *   node-red-dashboard
+ *
+ **************************************************************/
+
+// Select your modem:
+#define TINY_GSM_MODEM_SIM800
+// #define TINY_GSM_MODEM_SIM808
+// #define TINY_GSM_MODEM_SIM900
+// #define TINY_GSM_MODEM_UBLOX
+// #define TINY_GSM_MODEM_BG96
+// #define TINY_GSM_MODEM_A6
+// #define TINY_GSM_MODEM_A7
+// #define TINY_GSM_MODEM_M590
+// #define TINY_GSM_MODEM_ESP8266
+// #define TINY_GSM_MODEM_XBEE
+
+#include <TinyGsmClient.h>
+#include <PubSubClient.h>
+
+// Set serial for debug console (to the Serial Monitor, default speed 115200)
+#define SerialMon Serial
+
+// Use Hardware Serial on Mega, Leonardo, Micro
+#define SerialAT Serial1
+
+// or Software Serial on Uno, Nano
+//#include <SoftwareSerial.h>
+//SoftwareSerial SerialAT(2, 3); // RX, TX
+
+// Your GPRS credentials
+// Leave empty, if missing user or pass
+const char apn[] = "apn.konekt.io";
+const char user[] = "";
+const char pass[] = "";
+
+// MQTT details
+const char *broker = "test.mosquitto.org";
+
+const char *topicLed = "GsmClientTest/led";
+const char *topicInit = "GsmClientTest/init";
+const char *topicLedStatus = "GsmClientTest/ledStatus";
+
+TinyGsm modem(SerialAT);
+TinyGsmClient client(modem);
+PubSubClient mqtt(client);
+
+#define LED_PIN 13
+int ledStatus = LOW;
+
+long lastReconnectAttempt = 0;
+
+//======= TINYGSM End
+
 void setup()
 {
   // OLED SSD1306 Init
@@ -33,7 +118,9 @@ void setup()
   oled.setCursor(0, 0);
   oled.setTextSize(3);
   oled.setTextColor(WHITE);
-  oled.print("CKPT 1");
+  auto ckptStr = std::to_string(ckpt);
+  oled.print(ckptStr);
+  oled.print(ckpt);
   oled.display();
 
   pinMode(8, OUTPUT);
@@ -43,7 +130,7 @@ void setup()
   rtc.begin();
 
   Serial.println("Cellular 2G");
-  Serial.println("Modified by Dave 11/11/18");
+  Serial.println("Modified by Dave 11/13/18");
 }
 
 void loop()
@@ -74,17 +161,6 @@ void loop()
   Serial.print("° C, ");
   Serial.print(degF, 1);
   Serial.println("° F");
-
-  oled.clearDisplay();
-  oled.setCursor(0, 0);
-  oled.setTextSize(2);
-  oled.setTextColor(WHITE);
-  oled.println("CKPT 2");
-  oled.setTextSize(1);
-  oledPrint_dateTime(oled, "", true);
-  oled.print(degF, 1);
-  oled.println(" degF");
-  oled.display();
 
   delay(LEDtime);
 }
