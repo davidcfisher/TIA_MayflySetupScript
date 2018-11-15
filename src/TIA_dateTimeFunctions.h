@@ -20,32 +20,70 @@ void serialPrint_dateTime(char suffix[])
     Serial.print(now.second());
     Serial.print(suffix);
 }
-void oledPrint_dateTime(SDL_Arduino_SSD1306 oled, int textSize, char suffix[], bool newLine = false)
+void oledPrint_ckpt(SDL_Arduino_SSD1306 oled, int ckpt)
 {
 
-    DateTime now = rtc.now(); //get the current date-time
-    oled.setTextSize(textSize);
-    oled.print(now.month());
-    oled.print('/');
-    oled.print(now.date());
-    oled.print('/');
-    oled.println(String(now.year()).substring(2));
-    oled.print(' ');
-    oled.print(now.hour());
-    oled.print(':');
-    oled.print(now.minute());
-    oled.print(':');
-    oled.print(now.second());
+    oled.clearDisplay();
+    oled.setCursor(0, 0);
+    oled.setTextSize(2);
+    oled.setTextColor(WHITE);
+    oled.print("CKPT ");
+    oled.println(ckpt);
+    oled.display();
+}
 
-    if (newLine)
+void greenLED(String state, int flashes = 3)
+{
+    if (state == "on")
     {
-        //Serial.println("newLine detected!");
-        oled.println(suffix);
+        digitalWrite(8, HIGH);
     }
-    else
+    if (state == "off")
     {
-        oled.print(suffix);
+        digitalWrite(8, LOW);
     }
-
-    //oled.display();
+    if (state == "flash")
+    {
+        for (int i = 0; i < flashes; i++)
+        {
+            greenLED("on");
+            delay(50);
+            greenLED("off");
+            delay(50);
+        }
+    }
+}
+void redLED(String state, int flashes = 3)
+{
+    if (state == "on")
+    {
+        digitalWrite(9, HIGH);
+    }
+    if (state == "off")
+    {
+        digitalWrite(9, LOW);
+    }
+    if (state == "flash")
+    {
+        for (int i = 0; i < flashes; i++)
+        {
+            redLED("on");
+            delay(50);
+            redLED("off");
+            delay(50);
+        }
+    }
+}
+void showOnlyLED(String color)
+{
+    if (color == "red")
+    {
+        redLED("on");
+        greenLED("off");
+    }
+    if (color == "green")
+    {
+        greenLED("on");
+        redLED("off");
+    }
 }
